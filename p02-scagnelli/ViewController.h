@@ -11,7 +11,11 @@
 @class TileView;  //Why do I need this?
 
 @interface ViewController : UIViewController{
-    NSArray *tileArray;
+    NSArray *tileGrid;
+    NSArray *row1;
+    NSArray *row2;
+    NSArray *row3;
+    NSArray *row4;
 }
 
 @property (strong, nonatomic) IBOutlet TileView *tile1;
@@ -30,6 +34,15 @@
 @property (strong, nonatomic) IBOutlet TileView *tile14;
 @property (strong, nonatomic) IBOutlet TileView *tile15;
 @property (strong, nonatomic) IBOutlet TileView *tile16;
+
+@property (strong, nonatomic) UISwipeGestureRecognizer *leftSwipe;
+@property (strong, nonatomic) UISwipeGestureRecognizer *rightSwipe;
+@property (strong, nonatomic) UISwipeGestureRecognizer *upSwipe;
+@property (strong, nonatomic) UISwipeGestureRecognizer *downSwipe;
+
+- (int)randomNumberBetween:(int)min maxNum:(int)max;
+- (void)handleSwipes:(UISwipeGestureRecognizer *)sender;
+
 
 @end
 

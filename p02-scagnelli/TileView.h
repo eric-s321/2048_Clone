@@ -10,8 +10,11 @@
 
 @interface TileView : UIView
 
+
 @property (strong, nonatomic) IBOutlet UIView *view;
 @property (strong, nonatomic) IBOutlet UILabel *numberValue;
+
+@property (nonatomic) bool occupied;
 
 @end
 

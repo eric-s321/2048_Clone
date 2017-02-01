@@ -42,6 +42,11 @@
 
 - (int)randomNumberBetween:(int)min maxNum:(int)max;
 - (void)handleSwipes:(UISwipeGestureRecognizer *)sender;
+- (bool)canMoveLeft:(TileView *)tile;
+- (bool)canMoveRight:(TileView *)tile;
+- (bool)canMoveUp:(TileView *)tile;
+- (bool)canMoveDown:(TileView *)tile;
+- (NSMutableArray *)getOccupiedTiles;
 
 
 @end

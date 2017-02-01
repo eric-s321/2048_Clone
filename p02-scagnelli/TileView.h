@@ -14,6 +14,8 @@
 @property (strong, nonatomic) IBOutlet UIView *view;
 @property (strong, nonatomic) IBOutlet UILabel *numberValue;
 
+@property (nonatomic) int xIndex;
+@property (nonatomic) int yIndex;
 @property (nonatomic) bool occupied;
 
 @end

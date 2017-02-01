@@ -43,6 +43,9 @@ tile11, tile12, tile13, tile14, tile15, tile16;
         secondTileVisibleY = [self randomNumberBetween:0 maxNum:3];
     }
     
+    NSLog(@"firstX is %d firstY is%d\nsecondX is %d secondY is %d",
+          firstTileVisibleX, firstTileVisibleY, secondTileVisibleX, secondTileVisibleY);
+    
     // Make 2 random tiles display 2 and clear all other ones
     for(int i = 0; i < [tileGrid count]; i++){
         for(int j = 0; j < [tileGrid[i] count]; j++){
@@ -59,6 +62,8 @@ tile11, tile12, tile13, tile14, tile15, tile16;
                 tile.view.backgroundColor = [UIColor lightGrayColor];
                 tile.occupied = NO;
             }
+            tile.xIndex = i;  //Give initial positions in the grid
+            tile.yIndex = j;
         }
     }
     
@@ -97,6 +102,13 @@ tile11, tile12, tile13, tile14, tile15, tile16;
     
     if(sender.direction == UISwipeGestureRecognizerDirectionLeft){
         NSLog(@"Left");
+        
+        NSMutableArray *occupiedTiles = [self getOccupiedTiles];
+        for(int i = 0; i < [occupiedTiles count]; i++){
+            TileView *tile = occupiedTiles[i];
+            NSLog(@"tile at position x=%d y=%d is occupied", tile.xIndex, tile.yIndex);
+        }
+        
     }
     else if(sender.direction == UISwipeGestureRecognizerDirectionRight){
         NSLog(@"Right");
@@ -108,6 +120,46 @@ tile11, tile12, tile13, tile14, tile15, tile16;
     else if(sender.direction == UISwipeGestureRecognizerDirectionDown){
         NSLog(@"Down");
     }
+    
+}
+
+- (bool)canMoveLeft:(TileView *)tile{
+    int x = tile.xIndex;
+    int y = tile.yIndex;
+    
+    if(y == 0) //tile is in leftmost column
+        return NO;
+    
+    TileView *tileToLeft = tileGrid[x][y-1];
+    if(tileToLeft.occupied)
+        return NO;
+    
+    return YES;
+}
+
+- (bool)canMoveRight:(TileView *)tile{
+    return NO;
+}
+
+- (bool)canMoveUp:(TileView *)tile{
+    return NO;
+}
+
+- (bool)canMoveDown:(TileView *)tile{
+    return NO;
+}
+
+- (NSMutableArray *)getOccupiedTiles{
+    
+    NSMutableArray *occupiedArray = [[NSMutableArray alloc] init]; //Initialize empty dynamic array
+    for(int i = 0; i < [tileGrid count]; i++){
+        for(int j = 0; j < [tileGrid[i] count]; j++){
+            TileView *tile = tileGrid[i][j];
+            if(tile.occupied)
+                [occupiedArray addObject:tile];
+        }
+    }
+    return occupiedArray;
 }
 
 @end

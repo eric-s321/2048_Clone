@@ -8,6 +8,17 @@
 
 #import <UIKit/UIKit.h>
 
+/*
+ * This macro to get a UIColor from an RGB value was found on
+ * http://stackoverflow.com/questions/1560081/how-can-i-create-a-uicolor-from-a-hex-string
+ * All credit goes to "Tom" and thank you for the help!
+ */
+#define UIColorFromRGB(rgbValue) \
+    [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 \
+        green:((float)((rgbValue & 0x00FF00) >>  8))/255.0 \
+        blue:((float)((rgbValue & 0x0000FF) >>  0))/255.0 \
+        alpha:1.0]
+
 @class TileView;  //Why do I need this?
 
 @interface ViewController : UIViewController{
@@ -16,6 +27,13 @@
     NSArray *row2;
     NSArray *row3;
     NSArray *row4;
+    
+    UIColor *backgroundColor;
+    UIColor *blankTileColor;
+    UIColor *tile2Color;
+    UIColor *tile4Color;
+    UIColor *tile8Color;
+    UIColor *tile16Color;
 }
 
 @property (strong, nonatomic) IBOutlet TileView *tile1;
@@ -47,7 +65,7 @@
 - (bool)canMoveUp:(TileView *)tile;
 - (bool)canMoveDown:(TileView *)tile;
 - (NSMutableArray *)getOccupiedTiles;
-
+- (void)swapTiles:(TileView *)tileWithNum blankTile:(TileView *)blankTile;
 
 @end
 

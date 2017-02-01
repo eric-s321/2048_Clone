@@ -25,6 +25,15 @@ tile11, tile12, tile13, tile14, tile15, tile16;
     /*tileArray = [NSArray arrayWithObjects:tile1, tile2, tile3, tile4, tile5,
                  tile6, tile7, tile8, tile9, tile10, tile11, tile12,
                  tile13, tile14, tile15, tile16, nil];*/
+    backgroundColor = UIColorFromRGB(0x575761);
+    blankTileColor = UIColorFromRGB(0xD3BCCC);
+    tile2Color = UIColorFromRGB(0xE4FDE1);
+    tile4Color = UIColorFromRGB(0x648381);
+    tile8Color = UIColorFromRGB(0xFFBF46);
+    tile16Color = UIColorFromRGB(0x8ACB88);
+    
+    self.view.backgroundColor = backgroundColor;
+    
     
     row1 = [NSArray arrayWithObjects:tile1, tile2, tile3, tile4, nil];
     row2 = [NSArray arrayWithObjects:tile5, tile6, tile7, tile8, nil];
@@ -54,12 +63,12 @@ tile11, tile12, tile13, tile14, tile15, tile16;
             
             if((i == firstTileVisibleX && j == firstTileVisibleY) || (i == secondTileVisibleX && j == secondTileVisibleY)){
                 tile.numberValue.text = @"2";
-                tile.view.backgroundColor = [UIColor blueColor];
+                tile.view.backgroundColor = tile2Color;
                 tile.occupied = YES;
             }
             else{
                 tile.numberValue.text = @"";
-                tile.view.backgroundColor = [UIColor lightGrayColor];
+                tile.view.backgroundColor = blankTileColor;
                 tile.occupied = NO;
             }
             tile.xIndex = i;  //Give initial positions in the grid
@@ -107,16 +116,23 @@ tile11, tile12, tile13, tile14, tile15, tile16;
         for(int i = 0; i < [occupiedTiles count]; i++){
             TileView *tile = occupiedTiles[i];
             NSLog(@"tile at position x=%d y=%d is occupied", tile.xIndex, tile.yIndex);
+            while([self canMoveLeft:tile]){
+                TileView *tileToLeft = tileGrid[tile.xIndex][tile.yIndex - 1];
+                [self swapTiles:tile blankTile:tileToLeft];
+                tile = tileToLeft; //Check if the tile can be moved further left
+            }
         }
-        
     }
+    
     else if(sender.direction == UISwipeGestureRecognizerDirectionRight){
         NSLog(@"Right");
     }
+    
     else if (sender.direction == UISwipeGestureRecognizerDirectionUp){
         NSLog(@"Up");
     
     }
+    
     else if(sender.direction == UISwipeGestureRecognizerDirectionDown){
         NSLog(@"Down");
     }
@@ -160,6 +176,32 @@ tile11, tile12, tile13, tile14, tile15, tile16;
         }
     }
     return occupiedArray;
+}
+
+//Just swaps the numberValue of the tiles, does not actually move the objects
+- (void)swapTiles:(TileView *)tileWithNum blankTile:(TileView *)blankTile{
+    
+    int tempNumVal = [tileWithNum.numberValue.text intValue];
+    tileWithNum.numberValue.text = @"";
+    tileWithNum.view.backgroundColor = blankTileColor;
+    tileWithNum.occupied = NO;
+    blankTile.numberValue.text = [NSString stringWithFormat:@"%d", tempNumVal];
+    blankTile.occupied = YES;
+    switch([blankTile.numberValue.text intValue]){
+        case 2:
+            blankTile.view.backgroundColor = tile2Color;
+            break;
+        case 4:
+            blankTile.view.backgroundColor = tile4Color;
+            break;
+        case 8:
+            blankTile.view.backgroundColor = tile8Color;
+            break;
+        case 16:
+            blankTile.view.backgroundColor = tile16Color;
+            break;
+    }
+    
 }
 
 @end

@@ -19,6 +19,13 @@
         blue:((float)((rgbValue & 0x0000FF) >>  0))/255.0 \
         alpha:1.0]
 
+typedef enum{
+    LEFT_DIRECTION = 0,
+    RIGHT_DIRECTION = 1,
+    UP_DIRECTION = 2,
+    DOWN_DIRECTION = 3,
+} Direction;
+
 @class TileView;  //Why do I need this?
 
 @interface ViewController : UIViewController{
@@ -66,6 +73,7 @@
 - (bool)canMoveDown:(TileView *)tile;
 - (NSMutableArray *)getOccupiedTiles;
 - (void)swapTiles:(TileView *)tileWithNum blankTile:(TileView *)blankTile;
+- (void)combineTiles:(TileView *)firstTile secondTile:(TileView *)secondTile direction:(Direction) direction;
 
 @end
 

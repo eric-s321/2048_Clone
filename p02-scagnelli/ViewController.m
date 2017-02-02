@@ -109,32 +109,83 @@ tile11, tile12, tile13, tile14, tile15, tile16;
 
 - (void)handleSwipes:(UISwipeGestureRecognizer *)sender{
     
-    if(sender.direction == UISwipeGestureRecognizerDirectionLeft){
-        NSLog(@"Left");
+    /*
+     * Have to call each one 3 times incase 3 tiles
+     * are next to eachother in the same row
+     * otherwise only one tile would be moved.
+     */
+    for(int i =0; i < 3; i++) {
         
-        NSMutableArray *occupiedTiles = [self getOccupiedTiles];
-        for(int i = 0; i < [occupiedTiles count]; i++){
-            TileView *tile = occupiedTiles[i];
-            NSLog(@"tile at position x=%d y=%d is occupied", tile.xIndex, tile.yIndex);
-            while([self canMoveLeft:tile]){
-                TileView *tileToLeft = tileGrid[tile.xIndex][tile.yIndex - 1];
-                [self swapTiles:tile blankTile:tileToLeft];
-                tile = tileToLeft; //Check if the tile can be moved further left
+        //left
+        if(sender.direction == UISwipeGestureRecognizerDirectionLeft){
+            NSLog(@"Left");
+            
+            NSMutableArray *occupiedTiles = [self getOccupiedTiles];
+            for(int i = 0; i < [occupiedTiles count]; i++){
+                TileView *tile = occupiedTiles[i];
+                NSLog(@"tile at position x=%d y=%d is occupied", tile.xIndex, tile.yIndex);
+                while([self canMoveLeft:tile]){
+                    TileView *tileToLeft = tileGrid[tile.xIndex][tile.yIndex - 1];
+                    [self swapTiles:tile blankTile:tileToLeft];
+                    tile = tileToLeft; //Check if the tile can be moved further left
+                }
+                if(tile.yIndex != 0){ //Can't move any further left and is not in the leftmost column
+                    //combine tiles
+                
+                }
             }
         }
-    }
-    
-    else if(sender.direction == UISwipeGestureRecognizerDirectionRight){
-        NSLog(@"Right");
-    }
-    
-    else if (sender.direction == UISwipeGestureRecognizerDirectionUp){
-        NSLog(@"Up");
-    
-    }
-    
-    else if(sender.direction == UISwipeGestureRecognizerDirectionDown){
-        NSLog(@"Down");
+        
+        //right
+        else if(sender.direction == UISwipeGestureRecognizerDirectionRight){
+            NSLog(@"Right");
+            
+            NSMutableArray *occupiedTiles = [self getOccupiedTiles];
+            for(int i = 0; i < [occupiedTiles count]; i++){
+                TileView *tile = occupiedTiles[i];
+                NSLog(@"tile at position x=%d y=%d is occupied", tile.xIndex, tile.yIndex);
+                while([self canMoveRight:tile]){
+                    TileView *tileToRight = tileGrid[tile.xIndex][tile.yIndex + 1];
+                    [self swapTiles:tile blankTile:tileToRight];
+                    tile = tileToRight; //Check if the tile can be moved further right
+                }
+            }
+            
+            
+        }
+        
+        //up
+        else if (sender.direction == UISwipeGestureRecognizerDirectionUp){
+            NSLog(@"Up");
+            
+            NSMutableArray *occupiedTiles = [self getOccupiedTiles];
+            for(int i = 0; i < [occupiedTiles count]; i++){
+                TileView *tile = occupiedTiles[i];
+                NSLog(@"tile at position x=%d y=%d is occupied", tile.xIndex, tile.yIndex);
+                while([self canMoveUp:tile]){
+                    TileView *tileAbove = tileGrid[tile.xIndex - 1][tile.yIndex];
+                    [self swapTiles:tile blankTile:tileAbove];
+                    tile = tileAbove; //Check if the tile can be moved further up
+                }
+            }
+        
+        }
+        
+        //down
+        else if(sender.direction == UISwipeGestureRecognizerDirectionDown){
+            NSLog(@"Down");
+            
+            NSMutableArray *occupiedTiles = [self getOccupiedTiles];
+            for(int i = 0; i < [occupiedTiles count]; i++){
+                TileView *tile = occupiedTiles[i];
+                NSLog(@"tile at position x=%d y=%d is occupied", tile.xIndex, tile.yIndex);
+                while([self canMoveDown:tile]){
+                    TileView *tileBelow = tileGrid[tile.xIndex + 1][tile.yIndex];
+                    [self swapTiles:tile blankTile:tileBelow];
+                    tile = tileBelow; //Check if the tile can be moved further down
+                }
+            }
+        }
     }
     
 }
@@ -154,15 +205,45 @@ tile11, tile12, tile13, tile14, tile15, tile16;
 }
 
 - (bool)canMoveRight:(TileView *)tile{
-    return NO;
+    int x = tile.xIndex;
+    int y = tile.yIndex;
+    
+    if(y == 3) //tile is in the rightmost column
+        return NO;
+    
+    TileView *tileToRight = tileGrid[x][y+1];
+    if(tileToRight.occupied)
+        return NO;
+    
+    return YES;
 }
 
 - (bool)canMoveUp:(TileView *)tile{
-    return NO;
+    int x = tile.xIndex;
+    int y = tile.yIndex;
+    
+    if(x == 0) //tile is in the top row
+        return NO;
+    
+    TileView *tileAbove = tileGrid[x-1][y];
+    if(tileAbove.occupied)
+        return NO;
+    
+    return YES;
 }
 
 - (bool)canMoveDown:(TileView *)tile{
-    return NO;
+    int x = tile.xIndex;
+    int y = tile.yIndex;
+    
+    if(x == 3) //tile is in the bottom row
+        return NO;
+    
+    TileView *tileBelow = tileGrid[x+1][y];
+    if(tileBelow.occupied)
+        return NO;
+    
+    return YES;
 }
 
 - (NSMutableArray *)getOccupiedTiles{
@@ -201,7 +282,18 @@ tile11, tile12, tile13, tile14, tile15, tile16;
             blankTile.view.backgroundColor = tile16Color;
             break;
     }
+}
+
+- (void)combineTiles:(TileView *)firstTile secondTile:(TileView *)secondTile direction:(Direction) direction{
     
+    if(direction == LEFT_DIRECTION){ //tile1 will be leftmost tile and we will "blank out" tile2
+        if([firstTile.numberValue.text intValue] == [secondTile.numberValue.text intValue]){
+            
+            
+            
+        }
+    }
+
 }
 
 @end

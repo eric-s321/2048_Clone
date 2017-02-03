@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TileView.h"
 
 /*
  * This macro to get a UIColor from an RGB value was found on
@@ -19,14 +20,15 @@
         blue:((float)((rgbValue & 0x0000FF) >>  0))/255.0 \
         alpha:1.0]
 
+/*
 typedef enum{
     LEFT_DIRECTION = 0,
     RIGHT_DIRECTION = 1,
     UP_DIRECTION = 2,
     DOWN_DIRECTION = 3,
 } Direction;
+*/
 
-@class TileView;  //Why do I need this?
 
 @interface ViewController : UIViewController{
     NSArray *tileGrid;
@@ -73,7 +75,8 @@ typedef enum{
 - (bool)canMoveDown:(TileView *)tile;
 - (NSMutableArray *)getOccupiedTiles;
 - (void)swapTiles:(TileView *)tileWithNum blankTile:(TileView *)blankTile;
-- (void)combineTiles:(TileView *)firstTile secondTile:(TileView *)secondTile direction:(Direction) direction;
+- (void)combineTiles:(TileView *)tileWithNewValue tileToBeBlank:(TileView *)tileToBeBlank;
+- (void)switchBackgroundColor:(TileView *)tile value:(int) num;
 
 @end
 

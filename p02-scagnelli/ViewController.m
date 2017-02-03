@@ -130,8 +130,10 @@ tile11, tile12, tile13, tile14, tile15, tile16;
                     tile = tileToLeft; //Check if the tile can be moved further left
                 }
                 if(tile.yIndex != 0){ //Can't move any further left and is not in the leftmost column
-                    //combine tiles
-                
+                    //combine tiles if we can
+                    TileView *tileToLeft = tileGrid[tile.xIndex][tile.yIndex - 1];
+                    //[self combineTiles:tileToLeft secondTile:tile direction:LEFT_DIRECTION];
+                    [self combineTiles:tileToLeft tileToBeBlank:tile];
                 }
             }
         }
@@ -149,9 +151,12 @@ tile11, tile12, tile13, tile14, tile15, tile16;
                     [self swapTiles:tile blankTile:tileToRight];
                     tile = tileToRight; //Check if the tile can be moved further right
                 }
+                if(tile.yIndex != 3){
+                    TileView *tileToRight = tileGrid[tile.xIndex][tile.yIndex + 1];
+                //    [self combineTiles:tile secondTile:tileToRight direction:RIGHT_DIRECTION];
+                    [self combineTiles:tileToRight tileToBeBlank:tile];
+                }
             }
-            
-            
         }
         
         //up
@@ -166,6 +171,10 @@ tile11, tile12, tile13, tile14, tile15, tile16;
                     TileView *tileAbove = tileGrid[tile.xIndex - 1][tile.yIndex];
                     [self swapTiles:tile blankTile:tileAbove];
                     tile = tileAbove; //Check if the tile can be moved further up
+                }
+                if(tile.xIndex != 0){//As far up as can go and not against wall - check if can combine tiles
+                    TileView *tileAbove = tileGrid[tile.xIndex - 1][tile.yIndex];
+                    [self combineTiles:tileAbove tileToBeBlank:tile];
                 }
             }
         
@@ -184,9 +193,31 @@ tile11, tile12, tile13, tile14, tile15, tile16;
                     [self swapTiles:tile blankTile:tileBelow];
                     tile = tileBelow; //Check if the tile can be moved further down
                 }
+                if(tile.xIndex != 3){
+                    TileView *tileBelow = tileGrid[tile.xIndex + 1][tile.yIndex];
+                    [self combineTiles:tileBelow tileToBeBlank:tile];
+                }
             }
         }
     }
+    
+    
+// Done moving/combining tiles already present - create a new one in a random empty position
+
+    int newXPos = [self randomNumberBetween:0 maxNum:3];
+    int newYPos = [self randomNumberBetween:0 maxNum:3];
+    
+    TileView *newTile = tileGrid[newXPos][newYPos];
+ 
+    while(newTile.occupied){  //make sure we pick an unoccupied tile
+        newXPos = [self randomNumberBetween:0 maxNum:3];
+        newYPos = [self randomNumberBetween:0 maxNum:3];
+        newTile = tileGrid[newXPos][newYPos];
+    }
+ 
+    newTile.numberValue.text = @"2";
+    newTile.occupied = YES;
+    [self switchBackgroundColor:newTile value:2];
     
 }
 
@@ -196,6 +227,7 @@ tile11, tile12, tile13, tile14, tile15, tile16;
     
     if(y == 0) //tile is in leftmost column
         return NO;
+    
     
     TileView *tileToLeft = tileGrid[x][y-1];
     if(tileToLeft.occupied)
@@ -264,36 +296,49 @@ tile11, tile12, tile13, tile14, tile15, tile16;
     
     int tempNumVal = [tileWithNum.numberValue.text intValue];
     tileWithNum.numberValue.text = @"";
-    tileWithNum.view.backgroundColor = blankTileColor;
+    [self switchBackgroundColor:tileWithNum value:0];
     tileWithNum.occupied = NO;
     blankTile.numberValue.text = [NSString stringWithFormat:@"%d", tempNumVal];
     blankTile.occupied = YES;
-    switch([blankTile.numberValue.text intValue]){
-        case 2:
-            blankTile.view.backgroundColor = tile2Color;
-            break;
-        case 4:
-            blankTile.view.backgroundColor = tile4Color;
-            break;
-        case 8:
-            blankTile.view.backgroundColor = tile8Color;
-            break;
-        case 16:
-            blankTile.view.backgroundColor = tile16Color;
-            break;
+    [self switchBackgroundColor:blankTile value:tempNumVal];
+    
+}
+
+- (void)combineTiles:(TileView *)tileWithNewValue tileToBeBlank:(TileView *)tileToBeBlank{
+    
+    if([tileWithNewValue.numberValue.text intValue] == [tileToBeBlank.numberValue.text intValue]){
+        
+            tileWithNewValue.numberValue.text = [NSString stringWithFormat:@"%d",
+                                    [tileWithNewValue.numberValue.text intValue] * 2];
+            [self switchBackgroundColor:tileWithNewValue value:[tileWithNewValue.numberValue.text intValue]];
+            
+            tileToBeBlank.numberValue.text = @"";
+            [self switchBackgroundColor:tileToBeBlank value:0];
+            tileToBeBlank.occupied = NO;
+        
     }
 }
 
-- (void)combineTiles:(TileView *)firstTile secondTile:(TileView *)secondTile direction:(Direction) direction{
-    
-    if(direction == LEFT_DIRECTION){ //tile1 will be leftmost tile and we will "blank out" tile2
-        if([firstTile.numberValue.text intValue] == [secondTile.numberValue.text intValue]){
-            
-            
-            
-        }
-    }
 
+- (void)switchBackgroundColor:(TileView *)tile value:(int) num{
+    switch(num){
+        //0 means blank tile
+        case 0:
+            tile.view.backgroundColor = blankTileColor;
+            break;
+        case 2:
+            tile.view.backgroundColor = tile2Color;
+            break;
+        case 4:
+            tile.view.backgroundColor = tile4Color;
+            break;
+        case 8:
+            tile.view.backgroundColor = tile8Color;
+            break;
+        case 16:
+            tile.view.backgroundColor = tile16Color;
+            break;
+    }
 }
 
 @end

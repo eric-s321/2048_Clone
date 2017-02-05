@@ -43,6 +43,13 @@ typedef enum{
     UIColor *tile4Color;
     UIColor *tile8Color;
     UIColor *tile16Color;
+    UIColor *tile32Color;
+    UIColor *tile64Color;
+    UIColor *tile128Color;
+    UIColor *tile256Color;
+    UIColor *tile512Color;
+    UIColor *tile1024Color;
+    UIColor *tile2048Color;
 }
 
 @property (strong, nonatomic) IBOutlet TileView *tile1;
@@ -77,6 +84,7 @@ typedef enum{
 - (void)swapTiles:(TileView *)tileWithNum blankTile:(TileView *)blankTile;
 - (void)combineTiles:(TileView *)tileWithNewValue tileToBeBlank:(TileView *)tileToBeBlank;
 - (void)switchBackgroundColor:(TileView *)tile value:(int) num;
+- (bool)checkForGameOver;
 
 @end
 

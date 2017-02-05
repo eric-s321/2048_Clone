@@ -17,6 +17,7 @@
 @property (nonatomic) int xIndex;
 @property (nonatomic) int yIndex;
 @property (nonatomic) bool occupied;
+@property (nonatomic) bool hasMerged;
 
 @end
 

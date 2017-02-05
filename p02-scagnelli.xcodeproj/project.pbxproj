@@ -10,13 +10,14 @@
 		B634E93C1E381F7D00AA1B42 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B634E93B1E381F7D00AA1B42 /* main.m */; };
 		B634E93F1E381F7D00AA1B42 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B634E93E1E381F7D00AA1B42 /* AppDelegate.m */; };
 		B634E9421E381F7D00AA1B42 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B634E9411E381F7D00AA1B42 /* ViewController.m */; };
-		B634E9451E381F7D00AA1B42 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B634E9431E381F7D00AA1B42 /* Main.storyboard */; };
+		B634E9451E381F7D00AA1B42 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B634E9431E381F7D00AA1B42 /* Main.storyboard */; settings = {ASSET_TAGS = (GameOver, ); }; };
 		B634E9471E381F7D00AA1B42 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B634E9461E381F7D00AA1B42 /* Assets.xcassets */; };
 		B634E94A1E381F7D00AA1B42 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B634E9481E381F7D00AA1B42 /* LaunchScreen.storyboard */; };
 		B634E9551E381F7D00AA1B42 /* p02_scagnelliTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B634E9541E381F7D00AA1B42 /* p02_scagnelliTests.m */; };
 		B634E9601E381F7D00AA1B42 /* p02_scagnelliUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = B634E95F1E381F7D00AA1B42 /* p02_scagnelliUITests.m */; };
 		B659C2131E3AC36E00E1D664 /* TileView.m in Sources */ = {isa = PBXBuildFile; fileRef = B659C2121E3AC36E00E1D664 /* TileView.m */; };
 		B659C2151E3AC42000E1D664 /* Tile.xib in Resources */ = {isa = PBXBuildFile; fileRef = B659C2141E3AC42000E1D664 /* Tile.xib */; };
+		B6F87E601E47E19E00A59C7A /* GameOverViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B6F87E5F1E47E19E00A59C7A /* GameOverViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,6 +57,8 @@
 		B659C2111E3AC35400E1D664 /* TileView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TileView.h; sourceTree = "<group>"; };
 		B659C2121E3AC36E00E1D664 /* TileView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TileView.m; sourceTree = "<group>"; };
 		B659C2141E3AC42000E1D664 /* Tile.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Tile.xib; sourceTree = "<group>"; };
+		B6F87E5E1E47E02100A59C7A /* GameOverViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameOverViewController.h; sourceTree = "<group>"; };
+		B6F87E5F1E47E19E00A59C7A /* GameOverViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameOverViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -108,6 +111,8 @@
 			children = (
 				B634E93D1E381F7D00AA1B42 /* AppDelegate.h */,
 				B634E93E1E381F7D00AA1B42 /* AppDelegate.m */,
+				B6F87E5E1E47E02100A59C7A /* GameOverViewController.h */,
+				B6F87E5F1E47E19E00A59C7A /* GameOverViewController.m */,
 				B634E9401E381F7D00AA1B42 /* ViewController.h */,
 				B634E9411E381F7D00AA1B42 /* ViewController.m */,
 				B634E9431E381F7D00AA1B42 /* Main.storyboard */,
@@ -210,6 +215,9 @@
 		B634E92F1E381F7C00AA1B42 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				KnownAssetTags = (
+					GameOver,
+				);
 				LastUpgradeCheck = 0820;
 				ORGANIZATIONNAME = escagne1;
 				TargetAttributes = {
@@ -285,6 +293,7 @@
 				B634E9421E381F7D00AA1B42 /* ViewController.m in Sources */,
 				B634E93F1E381F7D00AA1B42 /* AppDelegate.m in Sources */,
 				B634E93C1E381F7D00AA1B42 /* main.m in Sources */,
+				B6F87E601E47E19E00A59C7A /* GameOverViewController.m in Sources */,
 				B659C2131E3AC36E00E1D664 /* TileView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

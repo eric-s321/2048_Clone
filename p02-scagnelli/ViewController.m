@@ -7,7 +7,6 @@
 //
 
 #import "ViewController.h"
-#import "TileView.h"
 
 @interface ViewController ()
 
@@ -28,12 +27,18 @@ tile11, tile12, tile13, tile14, tile15, tile16;
     backgroundColor = UIColorFromRGB(0x575761);
     blankTileColor = UIColorFromRGB(0xD3BCCC);
     tile2Color = UIColorFromRGB(0xE4FDE1);
-    tile4Color = UIColorFromRGB(0x648381);
+    tile4Color = UIColorFromRGB(0xB1DDF1);
     tile8Color = UIColorFromRGB(0xFFBF46);
     tile16Color = UIColorFromRGB(0x8ACB88);
+    tile32Color = UIColorFromRGB(0x52D1DC);
+    tile64Color = UIColorFromRGB(0xAEC5EB);
+    tile128Color = UIColorFromRGB(0x89A894);
+    tile256Color = UIColorFromRGB(0xADFCF9);
+    tile512Color = UIColorFromRGB(0x006BA6);
+    tile1024Color = UIColorFromRGB(0x0496FF);
+    tile2048Color = UIColorFromRGB(0xE85F5C);
     
     self.view.backgroundColor = backgroundColor;
-    
     
     row1 = [NSArray arrayWithObjects:tile1, tile2, tile3, tile4, nil];
     row2 = [NSArray arrayWithObjects:tile5, tile6, tile7, tile8, nil];
@@ -59,7 +64,7 @@ tile11, tile12, tile13, tile14, tile15, tile16;
     for(int i = 0; i < [tileGrid count]; i++){
         for(int j = 0; j < [tileGrid[i] count]; j++){
             
-            TileView *tile = tileGrid[i][j];  //Why do I have to make new variable instead of tileGrid[i][j].numberValue.text
+            TileView *tile = tileGrid[i][j];
             
             if((i == firstTileVisibleX && j == firstTileVisibleY) || (i == secondTileVisibleX && j == secondTileVisibleY)){
                 tile.numberValue.text = @"2";
@@ -109,6 +114,16 @@ tile11, tile12, tile13, tile14, tile15, tile16;
 
 - (void)handleSwipes:(UISwipeGestureRecognizer *)sender{
     
+    
+    //At the beginning of each swipe all tiles have not yet merged
+    for(int i = 0; i < [tileGrid count]; i++){
+        for(int j = 0; j < [tileGrid[i] count]; j++){
+            TileView *tile = tileGrid[i][j];
+            tile.hasMerged = NO;
+        }
+    }
+    
+    
     /*
      * Have to call each one 3 times incase 3 tiles
      * are next to eachother in the same row
@@ -132,8 +147,8 @@ tile11, tile12, tile13, tile14, tile15, tile16;
                 if(tile.yIndex != 0){ //Can't move any further left and is not in the leftmost column
                     //combine tiles if we can
                     TileView *tileToLeft = tileGrid[tile.xIndex][tile.yIndex - 1];
-                    //[self combineTiles:tileToLeft secondTile:tile direction:LEFT_DIRECTION];
-                    [self combineTiles:tileToLeft tileToBeBlank:tile];
+                    if(!tile.hasMerged && !tileToLeft.hasMerged) //Only allow each tile to be merged once per swipe
+                        [self combineTiles:tileToLeft tileToBeBlank:tile];
                 }
             }
         }
@@ -153,8 +168,8 @@ tile11, tile12, tile13, tile14, tile15, tile16;
                 }
                 if(tile.yIndex != 3){
                     TileView *tileToRight = tileGrid[tile.xIndex][tile.yIndex + 1];
-                //    [self combineTiles:tile secondTile:tileToRight direction:RIGHT_DIRECTION];
-                    [self combineTiles:tileToRight tileToBeBlank:tile];
+                    if(!tile.hasMerged && !tileToRight.hasMerged)
+                        [self combineTiles:tileToRight tileToBeBlank:tile];
                 }
             }
         }
@@ -174,7 +189,8 @@ tile11, tile12, tile13, tile14, tile15, tile16;
                 }
                 if(tile.xIndex != 0){//As far up as can go and not against wall - check if can combine tiles
                     TileView *tileAbove = tileGrid[tile.xIndex - 1][tile.yIndex];
-                    [self combineTiles:tileAbove tileToBeBlank:tile];
+                    if(!tile.hasMerged && !tileAbove.hasMerged)
+                        [self combineTiles:tileAbove tileToBeBlank:tile];
                 }
             }
         
@@ -195,7 +211,8 @@ tile11, tile12, tile13, tile14, tile15, tile16;
                 }
                 if(tile.xIndex != 3){
                     TileView *tileBelow = tileGrid[tile.xIndex + 1][tile.yIndex];
-                    [self combineTiles:tileBelow tileToBeBlank:tile];
+                    if(!tile.hasMerged && !tileBelow.hasMerged)
+                        [self combineTiles:tileBelow tileToBeBlank:tile];
                 }
             }
         }
@@ -218,6 +235,16 @@ tile11, tile12, tile13, tile14, tile15, tile16;
     newTile.numberValue.text = @"2";
     newTile.occupied = YES;
     [self switchBackgroundColor:newTile value:2];
+    
+    
+// Check for Game Over and display view if it is.
+    bool gameOver = [self checkForGameOver];
+    if(gameOver){
+        UIStoryboard *storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+        UIViewController *gameOverView = [storyBoard instantiateViewControllerWithIdentifier:@"GameOverViewController"];
+        gameOverView.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+        [self presentViewController:gameOverView animated:YES completion:nil];
+    }
     
 }
 
@@ -308,14 +335,14 @@ tile11, tile12, tile13, tile14, tile15, tile16;
     
     if([tileWithNewValue.numberValue.text intValue] == [tileToBeBlank.numberValue.text intValue]){
         
-            tileWithNewValue.numberValue.text = [NSString stringWithFormat:@"%d",
-                                    [tileWithNewValue.numberValue.text intValue] * 2];
-            [self switchBackgroundColor:tileWithNewValue value:[tileWithNewValue.numberValue.text intValue]];
-            
-            tileToBeBlank.numberValue.text = @"";
-            [self switchBackgroundColor:tileToBeBlank value:0];
-            tileToBeBlank.occupied = NO;
+        tileWithNewValue.numberValue.text = [NSString stringWithFormat:@"%d",
+                                       [tileWithNewValue.numberValue.text intValue] * 2];
+        [self switchBackgroundColor:tileWithNewValue value:[tileWithNewValue.numberValue.text intValue]];
+            tileWithNewValue.hasMerged = YES;
         
+        tileToBeBlank.numberValue.text = @"";
+        [self switchBackgroundColor:tileToBeBlank value:0];
+        tileToBeBlank.occupied = NO;
     }
 }
 
@@ -338,7 +365,40 @@ tile11, tile12, tile13, tile14, tile15, tile16;
         case 16:
             tile.view.backgroundColor = tile16Color;
             break;
+        case 32:
+            tile.view.backgroundColor = tile32Color;
+            break;
+        case 64:
+            tile.view.backgroundColor = tile64Color;
+            break;
+        case 128:
+            tile.view.backgroundColor = tile128Color;
+            break;
+        case 256:
+            tile.view.backgroundColor = tile256Color;
+            break;
+        case 512:
+            tile.view.backgroundColor = tile512Color;
+            break;
+        case 1024:
+            tile.view.backgroundColor = tile1024Color;
+            break;
+        case 2048:
+            tile.view.backgroundColor = tile2048Color;
+            break;
     }
+}
+
+- (bool)checkForGameOver{
+    
+    for(int i = 0; i < [tileGrid count]; i++){
+        for(int j = 0; j < [tileGrid[i] count]; j++){
+            TileView *tile = tileGrid[i][j];
+            if(!tile.occupied)
+                return NO;
+        }
+    }
+    return YES;
 }
 
 @end

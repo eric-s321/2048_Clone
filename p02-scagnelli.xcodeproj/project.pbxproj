@@ -18,6 +18,7 @@
 		B659C2131E3AC36E00E1D664 /* TileView.m in Sources */ = {isa = PBXBuildFile; fileRef = B659C2121E3AC36E00E1D664 /* TileView.m */; };
 		B659C2151E3AC42000E1D664 /* Tile.xib in Resources */ = {isa = PBXBuildFile; fileRef = B659C2141E3AC42000E1D664 /* Tile.xib */; };
 		B6F87E601E47E19E00A59C7A /* GameOverViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B6F87E5F1E47E19E00A59C7A /* GameOverViewController.m */; };
+		B6F87E631E47ED3600A59C7A /* WinnerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B6F87E621E47ED3600A59C7A /* WinnerViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,6 +60,8 @@
 		B659C2141E3AC42000E1D664 /* Tile.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Tile.xib; sourceTree = "<group>"; };
 		B6F87E5E1E47E02100A59C7A /* GameOverViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameOverViewController.h; sourceTree = "<group>"; };
 		B6F87E5F1E47E19E00A59C7A /* GameOverViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameOverViewController.m; sourceTree = "<group>"; };
+		B6F87E621E47ED3600A59C7A /* WinnerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WinnerViewController.m; sourceTree = "<group>"; };
+		B6F87E641E47F18000A59C7A /* WinnerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WinnerViewController.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,6 +116,8 @@
 				B634E93E1E381F7D00AA1B42 /* AppDelegate.m */,
 				B6F87E5E1E47E02100A59C7A /* GameOverViewController.h */,
 				B6F87E5F1E47E19E00A59C7A /* GameOverViewController.m */,
+				B6F87E641E47F18000A59C7A /* WinnerViewController.h */,
+				B6F87E621E47ED3600A59C7A /* WinnerViewController.m */,
 				B634E9401E381F7D00AA1B42 /* ViewController.h */,
 				B634E9411E381F7D00AA1B42 /* ViewController.m */,
 				B634E9431E381F7D00AA1B42 /* Main.storyboard */,
@@ -295,6 +300,7 @@
 				B634E93C1E381F7D00AA1B42 /* main.m in Sources */,
 				B6F87E601E47E19E00A59C7A /* GameOverViewController.m in Sources */,
 				B659C2131E3AC36E00E1D664 /* TileView.m in Sources */,
+				B6F87E631E47ED3600A59C7A /* WinnerViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

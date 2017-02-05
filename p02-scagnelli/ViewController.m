@@ -21,9 +21,7 @@ tile11, tile12, tile13, tile14, tile15, tile16;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    /*tileArray = [NSArray arrayWithObjects:tile1, tile2, tile3, tile4, tile5,
-                 tile6, tile7, tile8, tile9, tile10, tile11, tile12,
-                 tile13, tile14, tile15, tile16, nil];*/
+    
     backgroundColor = UIColorFromRGB(0x575761);
     blankTileColor = UIColorFromRGB(0xD3BCCC);
     tile2Color = UIColorFromRGB(0xE4FDE1);
@@ -37,6 +35,8 @@ tile11, tile12, tile13, tile14, tile15, tile16;
     tile512Color = UIColorFromRGB(0x006BA6);
     tile1024Color = UIColorFromRGB(0x0496FF);
     tile2048Color = UIColorFromRGB(0xE85F5C);
+    
+    winningTileValue = 2048;
     
     self.view.backgroundColor = backgroundColor;
     
@@ -114,6 +114,7 @@ tile11, tile12, tile13, tile14, tile15, tile16;
 
 - (void)handleSwipes:(UISwipeGestureRecognizer *)sender{
     
+    bool gameWon = NO;
     
     //At the beginning of each swipe all tiles have not yet merged
     for(int i = 0; i < [tileGrid count]; i++){
@@ -149,6 +150,8 @@ tile11, tile12, tile13, tile14, tile15, tile16;
                     TileView *tileToLeft = tileGrid[tile.xIndex][tile.yIndex - 1];
                     if(!tile.hasMerged && !tileToLeft.hasMerged) //Only allow each tile to be merged once per swipe
                         [self combineTiles:tileToLeft tileToBeBlank:tile];
+                    if([tileToLeft.numberValue.text intValue] == winningTileValue)
+                        gameWon = YES;
                 }
             }
         }
@@ -170,6 +173,9 @@ tile11, tile12, tile13, tile14, tile15, tile16;
                     TileView *tileToRight = tileGrid[tile.xIndex][tile.yIndex + 1];
                     if(!tile.hasMerged && !tileToRight.hasMerged)
                         [self combineTiles:tileToRight tileToBeBlank:tile];
+                    if([tileToRight.numberValue.text intValue] == winningTileValue)
+                        gameWon = YES;
+                    
                 }
             }
         }
@@ -191,6 +197,9 @@ tile11, tile12, tile13, tile14, tile15, tile16;
                     TileView *tileAbove = tileGrid[tile.xIndex - 1][tile.yIndex];
                     if(!tile.hasMerged && !tileAbove.hasMerged)
                         [self combineTiles:tileAbove tileToBeBlank:tile];
+                    if([tileAbove.numberValue.text intValue] == winningTileValue)
+                        gameWon = YES;
+                        
                 }
             }
         
@@ -213,9 +222,17 @@ tile11, tile12, tile13, tile14, tile15, tile16;
                     TileView *tileBelow = tileGrid[tile.xIndex + 1][tile.yIndex];
                     if(!tile.hasMerged && !tileBelow.hasMerged)
                         [self combineTiles:tileBelow tileToBeBlank:tile];
+                    if([tileBelow.numberValue.text intValue] == winningTileValue)
+                        gameWon = YES;
                 }
             }
         }
+    }
+    
+// Check if the game has been won! If it has display the winning view
+    if(gameWon){
+//        sleep(2); //sleep to let user see the 2048 tile and realize they won
+        [self displayWinningView];
     }
     
     
@@ -399,6 +416,15 @@ tile11, tile12, tile13, tile14, tile15, tile16;
         }
     }
     return YES;
+}
+
+- (void)displayWinningView{
+
+        UIStoryboard *storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+        UIViewController *winningView = [storyBoard instantiateViewControllerWithIdentifier:@"WinnerViewController"];
+        winningView.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+        [self presentViewController:winningView animated:YES completion:nil];
+
 }
 
 @end

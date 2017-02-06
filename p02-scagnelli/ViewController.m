@@ -18,25 +18,41 @@
 tile5, tile6, tile7, tile8, tile9, tile10,
 tile11, tile12, tile13, tile14, tile15, tile16;
 @synthesize leftSwipe, rightSwipe, upSwipe, downSwipe;
+@synthesize scoreLabel, mainMenuBtn, titleLabel;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
     backgroundColor = UIColorFromRGB(0x575761);
-    blankTileColor = UIColorFromRGB(0xD3BCCC);
+//    blankTileColor = UIColorFromRGB(0xD3BCCC);
+    blankTileColor = UIColorFromRGB(0xFFD9DA);
     tile2Color = UIColorFromRGB(0xE4FDE1);
     tile4Color = UIColorFromRGB(0xB1DDF1);
     tile8Color = UIColorFromRGB(0xFFBF46);
     tile16Color = UIColorFromRGB(0x8ACB88);
     tile32Color = UIColorFromRGB(0x52D1DC);
     tile64Color = UIColorFromRGB(0xAEC5EB);
-    tile128Color = UIColorFromRGB(0x89A894);
+//    tile128Color = UIColorFromRGB(0x89A894);
+    tile128Color = UIColorFromRGB(0x59C9A5);
     tile256Color = UIColorFromRGB(0xADFCF9);
     tile512Color = UIColorFromRGB(0x006BA6);
     tile1024Color = UIColorFromRGB(0x0496FF);
     tile2048Color = UIColorFromRGB(0xE85F5C);
     
+    UIColor *buttonBackground = UIColorFromRGB(0xBC412B);
+    UIColor *buttonFontColor = [UIColor whiteColor];
+    
+    //mainMenuBtn.layer.backgroundColor = (__bridge CGColorRef _Nullable)(buttonBackground);
+    mainMenuBtn.backgroundColor = buttonBackground;
+    [mainMenuBtn setTitleColor:buttonFontColor forState:UIControlStateNormal];
+    mainMenuBtn.layer.cornerRadius = 10;
+    
+    [titleLabel setTextColor:[UIColor whiteColor]];
+    
+    
     winningTileValue = 2048;
+    currentScore = 0;
+    scoreLabel.text = [NSString stringWithFormat:@"Score: %d", currentScore];
     
     self.view.backgroundColor = backgroundColor;
     
@@ -57,8 +73,8 @@ tile11, tile12, tile13, tile14, tile15, tile16;
         secondTileVisibleY = [self randomNumberBetween:0 maxNum:3];
     }
     
-    NSLog(@"firstX is %d firstY is%d\nsecondX is %d secondY is %d",
-          firstTileVisibleX, firstTileVisibleY, secondTileVisibleX, secondTileVisibleY);
+//    NSLog(@"firstX is %d firstY is%d\nsecondX is %d secondY is %d",
+//          firstTileVisibleX, firstTileVisibleY, secondTileVisibleX, secondTileVisibleY);
     
     // Make 2 random tiles display 2 and clear all other ones
     for(int i = 0; i < [tileGrid count]; i++){
@@ -134,12 +150,12 @@ tile11, tile12, tile13, tile14, tile15, tile16;
         
         //left
         if(sender.direction == UISwipeGestureRecognizerDirectionLeft){
-            NSLog(@"Left");
+//            NSLog(@"Left");
             
             NSMutableArray *occupiedTiles = [self getOccupiedTiles];
             for(int i = 0; i < [occupiedTiles count]; i++){
                 TileView *tile = occupiedTiles[i];
-                NSLog(@"tile at position x=%d y=%d is occupied", tile.xIndex, tile.yIndex);
+//                NSLog(@"tile at position x=%d y=%d is occupied", tile.xIndex, tile.yIndex);
                 while([self canMoveLeft:tile]){
                     TileView *tileToLeft = tileGrid[tile.xIndex][tile.yIndex - 1];
                     [self swapTiles:tile blankTile:tileToLeft];
@@ -158,12 +174,12 @@ tile11, tile12, tile13, tile14, tile15, tile16;
         
         //right
         else if(sender.direction == UISwipeGestureRecognizerDirectionRight){
-            NSLog(@"Right");
+//            NSLog(@"Right");
             
             NSMutableArray *occupiedTiles = [self getOccupiedTiles];
             for(int i = 0; i < [occupiedTiles count]; i++){
                 TileView *tile = occupiedTiles[i];
-                NSLog(@"tile at position x=%d y=%d is occupied", tile.xIndex, tile.yIndex);
+//                NSLog(@"tile at position x=%d y=%d is occupied", tile.xIndex, tile.yIndex);
                 while([self canMoveRight:tile]){
                     TileView *tileToRight = tileGrid[tile.xIndex][tile.yIndex + 1];
                     [self swapTiles:tile blankTile:tileToRight];
@@ -182,12 +198,12 @@ tile11, tile12, tile13, tile14, tile15, tile16;
         
         //up
         else if (sender.direction == UISwipeGestureRecognizerDirectionUp){
-            NSLog(@"Up");
+//            NSLog(@"Up");
             
             NSMutableArray *occupiedTiles = [self getOccupiedTiles];
             for(int i = 0; i < [occupiedTiles count]; i++){
                 TileView *tile = occupiedTiles[i];
-                NSLog(@"tile at position x=%d y=%d is occupied", tile.xIndex, tile.yIndex);
+//                NSLog(@"tile at position x=%d y=%d is occupied", tile.xIndex, tile.yIndex);
                 while([self canMoveUp:tile]){
                     TileView *tileAbove = tileGrid[tile.xIndex - 1][tile.yIndex];
                     [self swapTiles:tile blankTile:tileAbove];
@@ -207,12 +223,12 @@ tile11, tile12, tile13, tile14, tile15, tile16;
         
         //down
         else if(sender.direction == UISwipeGestureRecognizerDirectionDown){
-            NSLog(@"Down");
+//            NSLog(@"Down");
             
             NSMutableArray *occupiedTiles = [self getOccupiedTiles];
             for(int i = 0; i < [occupiedTiles count]; i++){
                 TileView *tile = occupiedTiles[i];
-                NSLog(@"tile at position x=%d y=%d is occupied", tile.xIndex, tile.yIndex);
+//                NSLog(@"tile at position x=%d y=%d is occupied", tile.xIndex, tile.yIndex);
                 while([self canMoveDown:tile]){
                     TileView *tileBelow = tileGrid[tile.xIndex + 1][tile.yIndex];
                     [self swapTiles:tile blankTile:tileBelow];
@@ -352,10 +368,11 @@ tile11, tile12, tile13, tile14, tile15, tile16;
     
     if([tileWithNewValue.numberValue.text intValue] == [tileToBeBlank.numberValue.text intValue]){
         
-        tileWithNewValue.numberValue.text = [NSString stringWithFormat:@"%d",
-                                       [tileWithNewValue.numberValue.text intValue] * 2];
+        int combinedValue = [tileWithNewValue.numberValue.text intValue] * 2;
+        tileWithNewValue.numberValue.text = [NSString stringWithFormat:@"%d", combinedValue];
         [self switchBackgroundColor:tileWithNewValue value:[tileWithNewValue.numberValue.text intValue]];
             tileWithNewValue.hasMerged = YES;
+        [self updateScoreLabel:combinedValue];
         
         tileToBeBlank.numberValue.text = @"";
         [self switchBackgroundColor:tileToBeBlank value:0];
@@ -425,6 +442,22 @@ tile11, tile12, tile13, tile14, tile15, tile16;
         winningView.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
         [self presentViewController:winningView animated:YES completion:nil];
 
+}
+
+- (void)updateScoreLabel:(int) newScoreToAdd{
+    
+    currentScore += newScoreToAdd;
+    scoreLabel.text = [NSString stringWithFormat:@"Score: %d", currentScore];
+    
+}
+
+- (IBAction)displayMainMenu:(id)sender {
+    
+        UIStoryboard *storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+        UIViewController *mainMenuView = [storyBoard instantiateViewControllerWithIdentifier:@"MainMenuViewController"];
+        mainMenuView.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+        [self presentViewController:mainMenuView animated:YES completion:nil];
+    
 }
 
 @end

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B61243171E49319C004B2BE9 /* MainMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B61243161E49319C004B2BE9 /* MainMenuViewController.m */; };
 		B634E93C1E381F7D00AA1B42 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B634E93B1E381F7D00AA1B42 /* main.m */; };
 		B634E93F1E381F7D00AA1B42 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B634E93E1E381F7D00AA1B42 /* AppDelegate.m */; };
 		B634E9421E381F7D00AA1B42 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B634E9411E381F7D00AA1B42 /* ViewController.m */; };
@@ -39,6 +40,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		B61243151E493149004B2BE9 /* MainMenuViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MainMenuViewController.h; sourceTree = "<group>"; };
+		B61243161E49319C004B2BE9 /* MainMenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainMenuViewController.m; sourceTree = "<group>"; };
 		B634E9371E381F7D00AA1B42 /* p02-scagnelli.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "p02-scagnelli.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B634E93B1E381F7D00AA1B42 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		B634E93D1E381F7D00AA1B42 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -114,6 +117,8 @@
 			children = (
 				B634E93D1E381F7D00AA1B42 /* AppDelegate.h */,
 				B634E93E1E381F7D00AA1B42 /* AppDelegate.m */,
+				B61243151E493149004B2BE9 /* MainMenuViewController.h */,
+				B61243161E49319C004B2BE9 /* MainMenuViewController.m */,
 				B6F87E5E1E47E02100A59C7A /* GameOverViewController.h */,
 				B6F87E5F1E47E19E00A59C7A /* GameOverViewController.m */,
 				B6F87E641E47F18000A59C7A /* WinnerViewController.h */,
@@ -228,6 +233,7 @@
 				TargetAttributes = {
 					B634E9361E381F7D00AA1B42 = {
 						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = ZF6U863PUS;
 						ProvisioningStyle = Automatic;
 					};
 					B634E94F1E381F7D00AA1B42 = {
@@ -301,6 +307,7 @@
 				B6F87E601E47E19E00A59C7A /* GameOverViewController.m in Sources */,
 				B659C2131E3AC36E00E1D664 /* TileView.m in Sources */,
 				B6F87E631E47ED3600A59C7A /* WinnerViewController.m in Sources */,
+				B61243171E49319C004B2BE9 /* MainMenuViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -449,6 +456,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = ZF6U863PUS;
 				INFOPLIST_FILE = "p02-scagnelli/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "escagne1.p02-scagnelli";
@@ -460,6 +468,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = ZF6U863PUS;
 				INFOPLIST_FILE = "p02-scagnelli/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "escagne1.p02-scagnelli";

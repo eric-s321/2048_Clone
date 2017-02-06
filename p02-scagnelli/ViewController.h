@@ -52,6 +52,7 @@ typedef enum{
     UIColor *tile2048Color;
     
     int winningTileValue;
+    int currentScore;
 }
 
 @property (strong, nonatomic) IBOutlet TileView *tile1;
@@ -70,6 +71,9 @@ typedef enum{
 @property (strong, nonatomic) IBOutlet TileView *tile14;
 @property (strong, nonatomic) IBOutlet TileView *tile15;
 @property (strong, nonatomic) IBOutlet TileView *tile16;
+@property (strong, nonatomic) IBOutlet UILabel *scoreLabel;
+@property (strong, nonatomic) IBOutlet UIButton *mainMenuBtn;
+@property (strong, nonatomic) IBOutlet UILabel *titleLabel;
 
 @property (strong, nonatomic) UISwipeGestureRecognizer *leftSwipe;
 @property (strong, nonatomic) UISwipeGestureRecognizer *rightSwipe;
@@ -88,6 +92,8 @@ typedef enum{
 - (void)switchBackgroundColor:(TileView *)tile value:(int) num;
 - (bool)checkForGameOver;
 - (void)displayWinningView;
+- (void)updateScoreLabel:(int) newScoreToAdd;
+- (IBAction)displayMainMenu:(id)sender;
 
 @end
 

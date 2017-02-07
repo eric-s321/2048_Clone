@@ -23,6 +23,7 @@ tile11, tile12, tile13, tile14, tile15, tile16;
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+// Setup colors
     backgroundColor = UIColorFromRGB(0x575761);
 //    blankTileColor = UIColorFromRGB(0xD3BCCC);
     blankTileColor = UIColorFromRGB(0xFFD9DA);
@@ -42,7 +43,6 @@ tile11, tile12, tile13, tile14, tile15, tile16;
     UIColor *buttonBackground = UIColorFromRGB(0xBC412B);
     UIColor *buttonFontColor = [UIColor whiteColor];
     
-    //mainMenuBtn.layer.backgroundColor = (__bridge CGColorRef _Nullable)(buttonBackground);
     mainMenuBtn.backgroundColor = buttonBackground;
     [mainMenuBtn setTitleColor:buttonFontColor forState:UIControlStateNormal];
     mainMenuBtn.layer.cornerRadius = 10;
@@ -63,6 +63,7 @@ tile11, tile12, tile13, tile14, tile15, tile16;
     
     tileGrid = [NSArray arrayWithObjects:row1,row2,row3,row4, nil];
     
+    //Randomly pick first two tiles to appear
     int firstTileVisibleX = [self randomNumberBetween:0 maxNum:3];
     int firstTileVisibleY = [self randomNumberBetween:0 maxNum:3];
     int secondTileVisibleX = [self randomNumberBetween:0 maxNum:3];
@@ -73,10 +74,8 @@ tile11, tile12, tile13, tile14, tile15, tile16;
         secondTileVisibleY = [self randomNumberBetween:0 maxNum:3];
     }
     
-//    NSLog(@"firstX is %d firstY is%d\nsecondX is %d secondY is %d",
-//          firstTileVisibleX, firstTileVisibleY, secondTileVisibleX, secondTileVisibleY);
     
-    // Make 2 random tiles display 2 and clear all other ones
+    // Make the 2 random tiles display 2 and clear all other ones
     for(int i = 0; i < [tileGrid count]; i++){
         for(int j = 0; j < [tileGrid[i] count]; j++){
             
@@ -131,6 +130,7 @@ tile11, tile12, tile13, tile14, tile15, tile16;
 - (void)handleSwipes:(UISwipeGestureRecognizer *)sender{
     
     bool gameWon = NO;
+    bool tilesHaveMoved = NO;
     
     //At the beginning of each swipe all tiles have not yet merged
     for(int i = 0; i < [tileGrid count]; i++){
@@ -150,22 +150,24 @@ tile11, tile12, tile13, tile14, tile15, tile16;
         
         //left
         if(sender.direction == UISwipeGestureRecognizerDirectionLeft){
-//            NSLog(@"Left");
             
             NSMutableArray *occupiedTiles = [self getOccupiedTiles];
             for(int i = 0; i < [occupiedTiles count]; i++){
                 TileView *tile = occupiedTiles[i];
-//                NSLog(@"tile at position x=%d y=%d is occupied", tile.xIndex, tile.yIndex);
                 while([self canMoveLeft:tile]){
                     TileView *tileToLeft = tileGrid[tile.xIndex][tile.yIndex - 1];
                     [self swapTiles:tile blankTile:tileToLeft];
+                    tilesHaveMoved = YES;
                     tile = tileToLeft; //Check if the tile can be moved further left
                 }
                 if(tile.yIndex != 0){ //Can't move any further left and is not in the leftmost column
                     //combine tiles if we can
                     TileView *tileToLeft = tileGrid[tile.xIndex][tile.yIndex - 1];
-                    if(!tile.hasMerged && !tileToLeft.hasMerged) //Only allow each tile to be merged once per swipe
-                        [self combineTiles:tileToLeft tileToBeBlank:tile];
+                    if(!tile.hasMerged && !tileToLeft.hasMerged){ //Only allow each tile to be merged once per swipe
+                        bool combined = [self combineTiles:tileToLeft tileToBeBlank:tile];
+                        if(combined)
+                            tilesHaveMoved = YES;
+                    }
                     if([tileToLeft.numberValue.text intValue] == winningTileValue)
                         gameWon = YES;
                 }
@@ -174,21 +176,23 @@ tile11, tile12, tile13, tile14, tile15, tile16;
         
         //right
         else if(sender.direction == UISwipeGestureRecognizerDirectionRight){
-//            NSLog(@"Right");
             
             NSMutableArray *occupiedTiles = [self getOccupiedTiles];
             for(int i = 0; i < [occupiedTiles count]; i++){
                 TileView *tile = occupiedTiles[i];
-//                NSLog(@"tile at position x=%d y=%d is occupied", tile.xIndex, tile.yIndex);
                 while([self canMoveRight:tile]){
                     TileView *tileToRight = tileGrid[tile.xIndex][tile.yIndex + 1];
                     [self swapTiles:tile blankTile:tileToRight];
+                    tilesHaveMoved = YES;
                     tile = tileToRight; //Check if the tile can be moved further right
                 }
                 if(tile.yIndex != 3){
                     TileView *tileToRight = tileGrid[tile.xIndex][tile.yIndex + 1];
-                    if(!tile.hasMerged && !tileToRight.hasMerged)
-                        [self combineTiles:tileToRight tileToBeBlank:tile];
+                    if(!tile.hasMerged && !tileToRight.hasMerged){
+                        bool combined = [self combineTiles:tileToRight tileToBeBlank:tile];
+                        if(combined)
+                            tilesHaveMoved = YES;
+                    }
                     if([tileToRight.numberValue.text intValue] == winningTileValue)
                         gameWon = YES;
                     
@@ -198,21 +202,23 @@ tile11, tile12, tile13, tile14, tile15, tile16;
         
         //up
         else if (sender.direction == UISwipeGestureRecognizerDirectionUp){
-//            NSLog(@"Up");
             
             NSMutableArray *occupiedTiles = [self getOccupiedTiles];
             for(int i = 0; i < [occupiedTiles count]; i++){
                 TileView *tile = occupiedTiles[i];
-//                NSLog(@"tile at position x=%d y=%d is occupied", tile.xIndex, tile.yIndex);
                 while([self canMoveUp:tile]){
                     TileView *tileAbove = tileGrid[tile.xIndex - 1][tile.yIndex];
                     [self swapTiles:tile blankTile:tileAbove];
+                    tilesHaveMoved = YES;
                     tile = tileAbove; //Check if the tile can be moved further up
                 }
                 if(tile.xIndex != 0){//As far up as can go and not against wall - check if can combine tiles
                     TileView *tileAbove = tileGrid[tile.xIndex - 1][tile.yIndex];
-                    if(!tile.hasMerged && !tileAbove.hasMerged)
-                        [self combineTiles:tileAbove tileToBeBlank:tile];
+                    if(!tile.hasMerged && !tileAbove.hasMerged){
+                        bool combined = [self combineTiles:tileAbove tileToBeBlank:tile];
+                        if(combined)
+                            tilesHaveMoved = YES;
+                    }
                     if([tileAbove.numberValue.text intValue] == winningTileValue)
                         gameWon = YES;
                         
@@ -223,21 +229,23 @@ tile11, tile12, tile13, tile14, tile15, tile16;
         
         //down
         else if(sender.direction == UISwipeGestureRecognizerDirectionDown){
-//            NSLog(@"Down");
             
             NSMutableArray *occupiedTiles = [self getOccupiedTiles];
             for(int i = 0; i < [occupiedTiles count]; i++){
                 TileView *tile = occupiedTiles[i];
-//                NSLog(@"tile at position x=%d y=%d is occupied", tile.xIndex, tile.yIndex);
                 while([self canMoveDown:tile]){
                     TileView *tileBelow = tileGrid[tile.xIndex + 1][tile.yIndex];
                     [self swapTiles:tile blankTile:tileBelow];
+                    tilesHaveMoved = YES;
                     tile = tileBelow; //Check if the tile can be moved further down
                 }
                 if(tile.xIndex != 3){
                     TileView *tileBelow = tileGrid[tile.xIndex + 1][tile.yIndex];
-                    if(!tile.hasMerged && !tileBelow.hasMerged)
-                        [self combineTiles:tileBelow tileToBeBlank:tile];
+                    if(!tile.hasMerged && !tileBelow.hasMerged){
+                        bool combined = [self combineTiles:tileBelow tileToBeBlank:tile];
+                        if(combined)
+                            tilesHaveMoved = YES;
+                    }
                     if([tileBelow.numberValue.text intValue] == winningTileValue)
                         gameWon = YES;
                 }
@@ -252,22 +260,23 @@ tile11, tile12, tile13, tile14, tile15, tile16;
     }
     
     
-// Done moving/combining tiles already present - create a new one in a random empty position
-
-    int newXPos = [self randomNumberBetween:0 maxNum:3];
-    int newYPos = [self randomNumberBetween:0 maxNum:3];
-    
-    TileView *newTile = tileGrid[newXPos][newYPos];
+// Done moving/combining tiles already present - create a new one in a random empty position if we moved at least one tile
+    if(tilesHaveMoved){
+        int newXPos = [self randomNumberBetween:0 maxNum:3];
+        int newYPos = [self randomNumberBetween:0 maxNum:3];
+        
+        TileView *newTile = tileGrid[newXPos][newYPos];
  
-    while(newTile.occupied){  //make sure we pick an unoccupied tile
-        newXPos = [self randomNumberBetween:0 maxNum:3];
-        newYPos = [self randomNumberBetween:0 maxNum:3];
-        newTile = tileGrid[newXPos][newYPos];
+        while(newTile.occupied){  //make sure we pick an unoccupied tile
+            newXPos = [self randomNumberBetween:0 maxNum:3];
+            newYPos = [self randomNumberBetween:0 maxNum:3];
+            newTile = tileGrid[newXPos][newYPos];
+        }
+ 
+        newTile.numberValue.text = @"2";
+        newTile.occupied = YES;
+        [self switchBackgroundColor:newTile value:2];
     }
- 
-    newTile.numberValue.text = @"2";
-    newTile.occupied = YES;
-    [self switchBackgroundColor:newTile value:2];
     
     
 // Check for Game Over and display view if it is.
@@ -364,7 +373,8 @@ tile11, tile12, tile13, tile14, tile15, tile16;
     
 }
 
-- (void)combineTiles:(TileView *)tileWithNewValue tileToBeBlank:(TileView *)tileToBeBlank{
+//Check tiles for equality, if they are the same combine.  Return whether or not we combined.
+- (bool)combineTiles:(TileView *)tileWithNewValue tileToBeBlank:(TileView *)tileToBeBlank{
     
     if([tileWithNewValue.numberValue.text intValue] == [tileToBeBlank.numberValue.text intValue]){
         
@@ -377,7 +387,11 @@ tile11, tile12, tile13, tile14, tile15, tile16;
         tileToBeBlank.numberValue.text = @"";
         [self switchBackgroundColor:tileToBeBlank value:0];
         tileToBeBlank.occupied = NO;
+        
+        return YES;
     }
+    
+    return NO;
 }
 
 

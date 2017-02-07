@@ -88,7 +88,7 @@ typedef enum{
 - (bool)canMoveDown:(TileView *)tile;
 - (NSMutableArray *)getOccupiedTiles;
 - (void)swapTiles:(TileView *)tileWithNum blankTile:(TileView *)blankTile;
-- (void)combineTiles:(TileView *)tileWithNewValue tileToBeBlank:(TileView *)tileToBeBlank;
+- (bool)combineTiles:(TileView *)tileWithNewValue tileToBeBlank:(TileView *)tileToBeBlank;
 - (void)switchBackgroundColor:(TileView *)tile value:(int) num;
 - (bool)checkForGameOver;
 - (void)displayWinningView;

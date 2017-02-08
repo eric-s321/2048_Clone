@@ -10,8 +10,9 @@
 
 @interface MainMenuViewController : UIViewController
 
+@property (strong, nonatomic) IBOutlet UIButton *continueBtn;
+@property (strong, nonatomic) IBOutlet UIButton *newgameBtn;
 
-- (IBAction)resumeGame:(id)sender;
 - (IBAction)newGame:(id)sender;
 
 @end

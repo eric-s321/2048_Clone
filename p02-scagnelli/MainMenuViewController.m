@@ -10,19 +10,33 @@
 #import "MainMenuViewController.h"
 
 @implementation MainMenuViewController
+@synthesize continueBtn, newgameBtn;
 
-- (IBAction)resumeGame:(id)sender{
+static bool existingGame = NO;
+
+- (void)viewDidLoad{
     
-    //Having trouble figuring out how to restore state of the previous view controller...
-    //For now this button won't do anything.
+    newgameBtn.layer.cornerRadius = 10;
+    continueBtn.layer.cornerRadius = 10;
+    
+    if(existingGame){
+        continueBtn.enabled = YES;
+        continueBtn.alpha = 1;
+    }
+    else{
+        continueBtn.enabled = NO;
+        continueBtn.alpha = .5;
+    }
+    
 
 }
+
 - (IBAction)newGame:(id)sender{
     
     UIStoryboard *storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     UIViewController *gameView = [storyBoard instantiateViewControllerWithIdentifier:@"GameplayView"];
+    existingGame = YES;
     [self presentViewController:gameView animated:YES completion:nil];
-
 }
 
 @end

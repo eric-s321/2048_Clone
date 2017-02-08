@@ -20,15 +20,6 @@
         blue:((float)((rgbValue & 0x0000FF) >>  0))/255.0 \
         alpha:1.0]
 
-/*
-typedef enum{
-    LEFT_DIRECTION = 0,
-    RIGHT_DIRECTION = 1,
-    UP_DIRECTION = 2,
-    DOWN_DIRECTION = 3,
-} Direction;
-*/
-
 
 @interface ViewController : UIViewController{
     NSArray *tileGrid;
@@ -93,7 +84,7 @@ typedef enum{
 - (bool)checkForGameOver;
 - (void)displayWinningView;
 - (void)updateScoreLabel:(int) newScoreToAdd;
-- (IBAction)displayMainMenu:(id)sender;
+- (IBAction)resumeGame:(UIStoryboardSegue *) segue;
 
 @end
 

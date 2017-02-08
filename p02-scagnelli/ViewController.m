@@ -25,7 +25,6 @@ tile11, tile12, tile13, tile14, tile15, tile16;
     
 // Setup colors
     backgroundColor = UIColorFromRGB(0x575761);
-//    blankTileColor = UIColorFromRGB(0xD3BCCC);
     blankTileColor = UIColorFromRGB(0xFFD9DA);
     tile2Color = UIColorFromRGB(0xE4FDE1);
     tile4Color = UIColorFromRGB(0xB1DDF1);
@@ -33,7 +32,6 @@ tile11, tile12, tile13, tile14, tile15, tile16;
     tile16Color = UIColorFromRGB(0x8ACB88);
     tile32Color = UIColorFromRGB(0x52D1DC);
     tile64Color = UIColorFromRGB(0xAEC5EB);
-//    tile128Color = UIColorFromRGB(0x89A894);
     tile128Color = UIColorFromRGB(0x59C9A5);
     tile256Color = UIColorFromRGB(0xADFCF9);
     tile512Color = UIColorFromRGB(0x006BA6);
@@ -254,10 +252,8 @@ tile11, tile12, tile13, tile14, tile15, tile16;
     }
     
 // Check if the game has been won! If it has display the winning view
-    if(gameWon){
-//        sleep(2); //sleep to let user see the 2048 tile and realize they won
+    if(gameWon)
         [self displayWinningView];
-    }
     
     
 // Done moving/combining tiles already present - create a new one in a random empty position if we moved at least one tile
@@ -289,6 +285,7 @@ tile11, tile12, tile13, tile14, tile15, tile16;
     }
     
 }
+
 
 - (bool)canMoveLeft:(TileView *)tile{
     int x = tile.xIndex;
@@ -465,13 +462,8 @@ tile11, tile12, tile13, tile14, tile15, tile16;
     
 }
 
-- (IBAction)displayMainMenu:(id)sender {
-    
-        UIStoryboard *storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-        UIViewController *mainMenuView = [storyBoard instantiateViewControllerWithIdentifier:@"MainMenuViewController"];
-        mainMenuView.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-        [self presentViewController:mainMenuView animated:YES completion:nil];
-    
+- (IBAction)resumeGame:(UIStoryboardSegue *) segue{
+    //Empty method to display GameplayView without making a new instance.
 }
 
 @end
